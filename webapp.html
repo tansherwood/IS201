@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: tan; /* Initial background color */
+            transition: background-color 0.5s; /* Smooth transition for color changes */
+        }
+        h1 {
+            font-size: 48px; /* Larger font size for h1 */
+            color: #444;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .tile {
+            width: 50px;
+            height: 50px;
+            border: 2px solid black;
+            text-align: center;
+            line-height: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: white;
+        }
+        .tile.correct {
+            background-color: #6aaa64;
+            color: white;
+        }
+        .tile.present {
+            background-color: #c9b458;
+            color: white;
+        }
+        .tile.absent {
+            background-color: #787c7e;
+            color: white;
+        }
+        #input {
+            width: 260px;
+            height: 40px;
+            border: 2px solid black;
+            padding: 5px;
+            font-size: 16px;
+            text-align: center;
+        }
+        #submit {
+            border: 2px solid black;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #6aaa64;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #submit:hover {
+            background-color: #5a9653;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="font-size: 48px; color: #444;">Wordle Clone</h1>
+    <div id="game" class="grid"></div>
+    <input id="input" type="text" maxlength="5" placeholder="Enter a 5-letter word">
+    <button id="submit">Submit</button>
+
+    <script>
+        // Expanded word bank with more 5-letter words
+        const wordBank = [
+            "APPLE", "BANJO", "CHAIR", "PLANT", "TRAIN", "CRANE", "SHARK", "GLASS", 
+            "BREAD", "BRICK", "HOUSE", "MOUSE", "TABLE", "CABLE", "CLOUD", "GRAPE", 
+            "SMILE", "PRIDE", "LIGHT", "BRAIN", "CANDY", "DRIVE", "FIELD", "FLAME", 
+            "EARTH", "NIGHT", "PIZZA", "ROBOT", "BRUSH", "FRUIT", "STONE", "STORY", 
+            "TOAST", "WATER", "YOUTH", "KNOCK", "PAINT", "PRINT", "FLOAT", "TRUCK", 
+            "WHEEL", "SUGAR", "FLOOD", "BLINK", "SNOWY", "FENCE", "WORLD", "POWER", 
+            "CROWN", "ANGEL", "NOBLE", "HAPPY", "LEMON", "QUIET", "ZEBRA", "TIGER", 
+            "VIOLET", "METAL", "MANGO", "CARGO", "CRASH", "STEAL", "MAJOR", "GUARD"
+        ];
+
+        // Randomly select a word from the expanded word bank
+        let correctWord = wordBank[Math.floor(Math.random() * wordBank.length)];
+
+        const game = document.getElementById('game');
+        const input = document.getElementById('input');
+        const submit = document.getElementById('submit');
+        let currentRow = 0;
+
+        // Create tiles for the game grid
+        function initializeGame() {
+            game.innerHTML = ""; // Clear the grid
+            for (let i = 0; i < 30; i++) {
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                game.appendChild(tile);
+            }
+            currentRow = 0;
+            input.disabled = false;
+            submit.disabled = false;
+            input.value = '';
+            document.body.style.backgroundColor = 'tan'; // Reset background color
+            correctWord = wordBank[Math.floor(Math.random() * wordBank.length)]; // Select a new word
+        }
+        initializeGame();
+
+        // Handle submission
+        function handleSubmission() {
+            const guess = input.value.toUpperCase();
+            if (guess.length !== 5) {
+                alert("Please enter a 5-letter word!");
+                return;
+            }
+
+            const rowStart = currentRow * 5;
+            const tiles = document.querySelectorAll('.tile');
+            const correctWordArray = correctWord.split('');
+            
+            // First pass: mark correct letters (green)
+            for (let i = 0; i < 5; i++) {
+                const tile = tiles[rowStart + i];
+                tile.textContent = guess[i];
+
+                if (guess[i] === correctWordArray[i]) {
+                    tile.classList.add('correct');
+                    correctWordArray[i] = null; // Mark letter as "used"
+                }
+            }
+
+            // Second pass: mark present letters (yellow)
+            for (let i = 0; i < 5; i++) {
+                const tile = tiles[rowStart + i];
+                if (!tile.classList.contains('correct') && correctWordArray.includes(guess[i])) {
+                    tile.classList.add('present');
+                    correctWordArray[correctWordArray.indexOf(guess[i])] = null; // Mark letter as "used"
+                } else if (!tile.classList.contains('correct')) {
+                    tile.classList.add('absent');
+                }
+            }
+
+            currentRow++;
+            input.value = '';
+
+            if (guess === correctWord) {
+                document.body.style.backgroundColor = "lightgreen"; // Change background to light green
+                alert("Congratulations! You guessed the word!");
+                setTimeout(initializeGame, 2000); // Restart game after 2 seconds
+            } else if (currentRow === 6) {
+                document.body.style.backgroundColor = "lightcoral"; // Change background to light red
+                alert(`Game over! The word was ${correctWord}.`);
+                setTimeout(initializeGame, 2000); // Restart game after 2 seconds
+            }
+        }
+
+        // Submit button event listener
+        submit.addEventListener('click', handleSubmission);
+
+        // Enter key event listener
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                handleSubmission();
+            }
+        });
+    </script>
+</body>
+</html>

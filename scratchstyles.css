@@ -1,0 +1,85 @@
+/* General page styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: ivory;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    color: black; /* Default text color */
+}
+
+#wrapper {
+    border: 5px solid darkgreen;
+    padding: 20px;
+    max-width: 800px;
+    background-color: white;
+}
+
+/* Centered title without shadow */
+header h1 {
+    text-align: center;
+    color: darkgreen;
+}
+
+/* Centered intro paragraph */
+header .intro {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Left-aligned content */
+header p:not(.intro), #intro, #players, #tableau-graph, #clips, #rackets, footer {
+    text-align: left;
+}
+
+/* Centering images and videos */
+.center-content {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Styling for subtitles (h2 tags) */
+h2 {
+    color: darkgreen; /* Subtitles in dark green */
+}
+
+/* Styling for unordered and ordered lists */
+#intro ul, #players ol {
+    margin: 0;
+    padding: 0 20px; /* Adds consistent spacing from border edges */
+}
+
+#players ol {
+    list-style-position: inside; /* Ensures bullet points stay left-aligned */
+}
+
+#players strong {
+    font-weight: bold; /* Bold tennis player names */
+}
+
+/* Section-specific margins */
+#intro, #players, #tableau-graph, #clips, #rackets {
+    margin-bottom: 20px;
+}
+
+/* Footer styling */
+footer {
+    margin-top: 20px;
+}
+
+footer a {
+    text-decoration: none;
+    color: darkgreen;
+}
+
+/* Styling for the embedded Tableau graph */
+#tableau-graph .tableauPlaceholder {
+    width: 800px;
+    margin: 0 auto; /* Centers the Tableau graph as a block */
+}
+
+#tableau-graph h2 {
+    margin-bottom: 10px;
+}
